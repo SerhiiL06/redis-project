@@ -1,0 +1,1 @@
+In this repository there will be various practical uses of Redis in the form of a main database, to study and get acquainted with the capabilities of this NoSQL database.
