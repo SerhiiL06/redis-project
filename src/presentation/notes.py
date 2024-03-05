@@ -1,24 +1,29 @@
-from fastapi import APIRouter, Response, Body
-from core.database import session
-from datetime import datetime
-import json
+from fastapi import APIRouter, Response, Body, Depends
+from typing import Annotated
+
+from src.domain.notes import NoteService
+
 
 note_router = APIRouter()
 
 
-@note_router.post("/notes")
-async def add_note(user: int, note: str = Body()):
-    incr = session.incr("user_id_counter")
-    key = f"note:{incr}"
-    session.hset(key, mapping={"note": note, "created": str(datetime.now())})
-    session.lpush(user, key)
-    return Response(str(key), 200)
+@note_router.post("/notes", status_code=201)
+async def add_note(
+    service: Annotated[NoteService, Depends()],
+    user: int,
+    note: str = Body(min_length=5),
+):
+
+    return await service.create_note(user, note)
 
 
-@note_router.get("/notes")
-async def get_user_notes(user):
-    response = []
+@note_router.get("/notes", status_code=200)
+async def user_notes(service: Annotated[NoteService, Depends()], user):
+    return await service.user_notes(user)
 
-    for el in session.lrange(user, 0, -1):
-        response.append(session.hgetall(el))
-    return response
+
+@note_router.delete("/notes", status_code=204)
+async def delete_note(
+    service: Annotated[NoteService, Depends()], user: int, note_id: int
+):
+    return await service.drop_note(user, note_id)
