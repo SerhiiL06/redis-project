@@ -10,8 +10,8 @@ post_router = APIRouter(tags=["posts"])
 
 
 @post_router.get("/posts")
-async def content_list(service: Annotated[PostDomain, Depends()]):
-    return service.all()
+async def content_list(service: Annotated[PostDomain, Depends()], category: str = None):
+    return service.all(category)
 
 
 @post_router.post("/posts")

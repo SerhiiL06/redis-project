@@ -9,13 +9,20 @@ from .validators import validate_post
 class PostDomain:
     POST_KEY = "posts:"
 
-    def all(self) -> list[PostDTO]:
+    def all(self, category: str = None) -> list[PostDTO]:
 
         result = []
-        for i in session.keys("posts:[0-9]"):
-            retrieve = session.hgetall(i)
-            retrieve.update({"post_id": i})
-            result.append(retrieve)
+        if category:
+            ids = session.smembers(f"category:{category}")
+            for i in ids:
+                retrieve = session.hgetall(i)
+                retrieve.update({"post_id": i})
+                result.append(retrieve)
+        else:
+            for i in session.keys("posts:[0-9]"):
+                retrieve = session.hgetall(i)
+                retrieve.update({"post_id": i})
+                result.append(retrieve)
         return result
 
     def create(self, data: PostDTO):
@@ -27,6 +34,7 @@ class PostDomain:
         hash_key = self.POST_KEY + str(increment)
         session.rpush(f"user:posts:{data.owner_id}", hash_key)
 
+        session.sadd(f"category:{data.category}", hash_key)
         session.hset(
             hash_key,
             mapping={
