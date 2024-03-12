@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from src.domain.posts import PostDomain
+from src.domain.posts import PostDomain, ReactionDomain
 
 from .DTO import PostDTO
 
@@ -27,3 +27,10 @@ async def my_post(service: Annotated[PostDomain, Depends()], user_id: int):
 @post_router.get("/posts/{post_id}")
 async def retrieve_post(service: Annotated[PostDomain, Depends()], post_id: int):
     return service.detail(post_id)
+
+
+@post_router.post("/posts/{post_id}/like")
+async def post_reaction(
+    service: Annotated[ReactionDomain, Depends()], post_id: int, user_id: int
+):
+    return service.like(post_id, user_id)
