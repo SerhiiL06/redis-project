@@ -1,7 +1,9 @@
-from fastapi import FastAPI, Body, Request
-from src.presentation.notes import note_router
-from src.presentation.translator import word_router
+from fastapi import FastAPI, Request
+
 from core.database import session
+from src.presentation.notes import note_router
+from src.presentation.posts import post_router
+from src.presentation.translator import word_router
 
 app = FastAPI()
 
@@ -15,3 +17,4 @@ async def count_activity(request: Request, next_call):
 
 app.include_router(note_router)
 app.include_router(word_router)
+app.include_router(post_router)

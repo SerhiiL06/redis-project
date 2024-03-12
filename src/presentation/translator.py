@@ -1,7 +1,10 @@
-from fastapi import APIRouter, Depends
-from .DTO import WordDTO
-from src.domain.translator import TranslatorService
 from typing import Annotated
+
+from fastapi import APIRouter, Depends
+
+from src.domain.translator import TranslatorService
+
+from .DTO import WordDTO
 
 word_router = APIRouter(prefix="/word", tags=["translate"])
 

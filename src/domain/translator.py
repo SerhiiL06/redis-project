@@ -4,7 +4,6 @@ from src.presentation.DTO import WordDTO
 
 class TranslatorService:
     async def count_word(self):
-        print(len(session.keys("word:*")))
         return {"count": len(session.keys("word:*"))}
 
     async def add_translate(self, word: WordDTO):

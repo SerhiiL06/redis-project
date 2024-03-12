@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Response, Body, Depends
 from typing import Annotated
 
-from src.domain.notes import NoteService
+from fastapi import APIRouter, Body, Depends, Response
 
+from src.domain.notes import NoteService
 
 note_router = APIRouter()
 

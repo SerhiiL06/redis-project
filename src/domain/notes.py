@@ -1,5 +1,6 @@
-from core.database import session
 from datetime import datetime
+
+from core.database import session
 
 
 class NoteService:
